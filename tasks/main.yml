@@ -1,9 +1,5 @@
 ---
-- name: "update the dotfiles for user"
-  ansible.builtin.debug:
-    msg: "applying dotfiles to user {{ ansible_user }}"
-
-- name: Ensure dotfiles repository is cloned locally.
+- name: Ensure dotfiles repository is cloned locally. user="{{ ansible_user }}"
   git:
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles_repo_local_destination }}"
@@ -11,20 +7,20 @@
     accept_hostkey: "{{ dotfiles_repo_accept_hostkey }}"
   become: false
 
-- name: Check if submodules are in use
+- name: Check if submodules are in use. user="{{ ansible_user }}"
   stat:
     path: "{{ dotfiles_repo_local_destination }}/.gitmodules"
   register: result
   become: false
 
-- name: Update submodules if needed
+- name: Update submodules if needed. user="{{ ansible_user }}"
   ansible.builtin.shell:
     chdir: "{{ dotfiles_repo_local_destination }}"
     cmd: "git submodule update --init"
   when: result.stat.exists
   become: false
 
-- name: Ensure all configured dotfiles are links.
+- name: Ensure all configured dotfiles are links. user="{{ ansible_user }}"
   command: "ls -F {{ dotfiles_home }}/{{ item }}"
   register: existing_dotfile_info
   failed_when: false
@@ -34,7 +30,7 @@
   loop_control:
     label: "{{ [item] }}"
 
-- name: Remove existing dotfiles file if a replacement is being linked.
+- name: Remove existing dotfiles file if a replacement is being linked. user="{{ ansible_user }}"
   file:
     path: "{{ dotfiles_home }}/{{ existing_dotfile.item }}"
     state: absent
@@ -44,7 +40,7 @@
     label: "{{ [existing_dotfile.item] }}"
     loop_var: existing_dotfile
 
-- name: Create required folders in home folder.
+- name: Create required folders in home folder. user="{{ ansible_user }}"
   file:
     path: "{{ dotfiles_home }}/{{ dotfile_folder_to_create }}"
     state: directory
@@ -54,7 +50,7 @@
   loop_control:
     loop_var: dotfile_folder_to_create
 
-- name: Link dotfiles into home folder.
+- name: Link dotfiles into home folder. user="{{ ansible_user }}"
   file:
     src: "{{ dotfiles_repo_local_destination }}/{{ dotfile_to_be_linked }}"
     dest: "{{ dotfiles_home }}/{{ dotfile_to_be_linked }}"
@@ -65,7 +61,7 @@
   loop_control:
     loop_var: dotfile_to_be_linked
 
-- name: Link special dotfiles into home folder.
+- name: Link special dotfiles into home folder. user="{{ ansible_user }}"
   file:
     src: "{{ dotfiles_repo_local_destination }}/{{ special_dotfile_to_be_linked.src }}"
     dest: "{{ dotfiles_home }}/{{ special_dotfile_to_be_linked.dest }}"
