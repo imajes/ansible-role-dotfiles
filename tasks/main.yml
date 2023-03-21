@@ -15,7 +15,7 @@
 
 - name: Update submodules if needed
   ansible.builtin.shell:
-    chdir: {{ dotfiles_repo_local_destination }}
+    chdir: "{{ dotfiles_repo_local_destination }}"
     cmd: "git submodule update --init"
   when: result.stat.exists
   become: false
