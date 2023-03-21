@@ -36,35 +36,42 @@
 
 - name: Remove existing dotfiles file if a replacement is being linked.
   file:
-    path: "{{ dotfiles_home }}/{{ item.item }}"
+    path: "{{ dotfiles_home }}/{{ existing_dotfiles.item }}"
     state: absent
   when: "item.rc == 0"
   loop: "{{ existing_dotfile_info.results|flatten(levels=1) }}"
   loop_control:
-    label: "{{ [item.item] }}"
+    label: "{{ [existing_dotfiles.item] }}"
+    loop_var: existing_dotfiles
 
 - name: Create required folders in home folder.
   file:
-    path: "{{ dotfiles_home }}/{{ item }}"
+    path: "{{ dotfiles_home }}/{{ dotfile_folder_to_create }}"
     state: directory
     mode: "u=rwX,g=rX,o=rX"
   become: false
   loop: "{{ dotfiles_folders }}"
+  loop_control:
+    loop_var: dotfile_folder_to_create
 
 - name: Link dotfiles into home folder.
   file:
-    src: "{{ dotfiles_repo_local_destination }}/{{ item }}"
-    dest: "{{ dotfiles_home }}/{{ item }}"
+    src: "{{ dotfiles_repo_local_destination }}/{{ dotfile_to_be_linked }}"
+    dest: "{{ dotfiles_home }}/{{ dotfile_to_be_linked }}"
     state: link
     mode: "u=rwX,g=rX,o=rX"
   become: false
   loop: "{{ dotfiles_files }}"
+  loop_control:
+    loop_var: dotfile_to_be_linked
 
 - name: Link special dotfiles into home folder.
   file:
-    src: "{{ dotfiles_repo_local_destination }}/{{ item.src }}"
-    dest: "{{ dotfiles_home }}/{{ item.dest }}"
+    src: "{{ dotfiles_repo_local_destination }}/{{ special_dotfile_to_be_linked.src }}"
+    dest: "{{ dotfiles_home }}/{{ special_dotfile_to_be_linked.dest }}"
     state: link
     mode: "u=rwX,g=rX,o=rX"
   become: false
   loop: "{{ dotfiles_special_links|flatten(levels=1) }}"
+  loop_control:
+    loop_var: special_dotfile_to_be_linked
