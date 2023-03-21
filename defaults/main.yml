@@ -7,8 +7,10 @@ dotfiles_repo_local_destination: "~/.dotfiles"
 dotfiles_home: "~"
 dotfiles_folders:
   - .config
+  - .extras
   - .zsh
 dotfiles_files:
+  - .cargo
   - .config/nvim
   - .gemrc
   - .gitconfig
@@ -28,3 +30,7 @@ dotfiles_files:
 dotfiles_special_links:
   - dest: .vimrc
     src: .config/nvim/init.vim
+  - dest: .oh-my-zsh/custom/plugins/evalcache
+    src: .extras/evalcache
+  - dest: .oh-my-zsh/custom/plugins/zsh-histdb
+    src: .extras/zsh-histdb
