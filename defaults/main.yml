@@ -20,6 +20,7 @@ dotfiles_files:
   - .irbrc
   - .oh-my-zsh
   - .pryrc
+  - .pyenv
   - .rdebugrc
   - .sudo_as_admin_successful
   - .tmux
