@@ -38,7 +38,7 @@
   file:
     path: "{{ dotfiles_home }}/{{ existing_dotfile.item }}"
     state: absent
-  when: "existing_dotfile.item.rc == 0"
+  when: "existing_dotfile.rc == 0"
   loop: "{{ existing_dotfile_info.results|flatten(levels=1) }}"
   loop_control:
     label: "{{ [existing_dotfile.item] }}"
