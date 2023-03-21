@@ -5,22 +5,12 @@
     dest: "{{ dotfiles_repo_local_destination }}"
     version: "{{ dotfiles_repo_version }}"
     accept_hostkey: "{{ dotfiles_repo_accept_hostkey }}"
-    track_submodules: true
-  become: false
 
-# - name: Check if submodules are in use. user="{{ ansible_user }}"
-#   stat:
-#     path: "{{ dotfiles_repo_local_destination }}/.gitmodules"
-#   register: result
-#   become: false
-#
-# - name: Update submodules if needed. user="{{ ansible_user }}"
-#   ansible.builtin.shell:
-#     chdir: "{{ dotfiles_repo_local_destination }}"
-#     cmd: "git submodule update --init"
-#   when: result.stat.exists
-#   become: false
-#
+- name: Update submodules & init if needed. user="{{ ansible_user }}"
+  ansible.builtin.shell:
+    chdir: "{{ dotfiles_repo_local_destination }}"
+    cmd: "git submodule update --init"
+
 - name: Ensure all configured dotfiles are links. user="{{ ansible_user }}"
   command: "ls -F {{ dotfiles_home }}/{{ item }}"
   register: existing_dotfile_info
@@ -46,7 +36,6 @@
     path: "{{ dotfiles_home }}/{{ dotfile_folder_to_create }}"
     state: directory
     mode: "u=rwX,g=rX,o=rX"
-  become: false
   loop: "{{ dotfiles_folders }}"
   loop_control:
     loop_var: dotfile_folder_to_create
@@ -57,7 +46,6 @@
     dest: "{{ dotfiles_home }}/{{ dotfile_to_be_linked }}"
     state: link
     mode: "u=rwX,g=rX,o=rX"
-  become: false
   loop: "{{ dotfiles_files }}"
   loop_control:
     loop_var: dotfile_to_be_linked
@@ -68,7 +56,6 @@
     dest: "{{ dotfiles_home }}/{{ special_dotfile_to_be_linked.dest }}"
     state: link
     mode: "u=rwX,g=rX,o=rX"
-  become: false
   loop: "{{ dotfiles_special_links|flatten(levels=1) }}"
   loop_control:
     loop_var: special_dotfile_to_be_linked
