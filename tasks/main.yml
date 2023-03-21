@@ -14,15 +14,17 @@
   check_mode: false
   changed_when: false
   loop: "{{ dotfiles_files }}"
+  loop_control:
+    label: "{{ [item] }}"
 
 - name: Remove existing dotfiles file if a replacement is being linked.
   file:
-    path: "{{ dotfiles_home }}/{{ dotfiles_files[item.0] }}"
+    path: "{{ dotfiles_home }}/{{ item.item }}"
     state: absent
-  when: "'@' not in item.1.stdout"
+  when: "item.rc == 0"
   loop: "{{ existing_dotfile_info.results|flatten(levels=1) }}"
   loop_control:
-    label: "{{ dotfiles_files[item.0] }}"
+    label: "{{ [item.item] }}"
 
 - name: Create required folders in home folder.
   file:
