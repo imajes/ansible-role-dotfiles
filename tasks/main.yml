@@ -32,3 +32,13 @@
     mode: "u=rwX,g=rX,o=rX"
   become: false
   with_items: "{{ dotfiles_files }}"
+
+- name: Check if submodules are in use
+  stat:
+    path: "{{ dotfiles_home }}/.gitmodules"
+  register: result
+
+- name: Update submodules if needed
+  command: "git submodule update --init"
+  when: result.stat.exists
+
