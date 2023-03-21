@@ -55,6 +55,7 @@
     src: "{{ dotfiles_repo_local_destination }}/{{ special_dotfile_to_be_linked.src }}"
     dest: "{{ dotfiles_home }}/{{ special_dotfile_to_be_linked.dest }}"
     state: link
+    force: true
     mode: "u=rwX,g=rX,o=rX"
   loop: "{{ dotfiles_special_links|flatten(levels=1) }}"
   loop_control:
