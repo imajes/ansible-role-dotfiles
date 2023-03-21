@@ -60,7 +60,7 @@
   file:
     src: "{{ dotfiles_repo_local_destination }}/{{ item.src }}"
     dest: "{{ dotfiles_home }}/{{ item.dest }}"
-    state: file
+    state: link
     mode: "u=rwX,g=rX,o=rX"
   become: false
   loop: "{{ dotfiles_special_links|flatten(levels=1) }}"
