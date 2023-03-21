@@ -34,3 +34,5 @@ dotfiles_special_links:
     src: .extras/evalcache
   - dest: .oh-my-zsh/custom/plugins/zsh-histdb
     src: .extras/zsh-histdb
+  - dest: docker
+    src: /mnt/apps/docker
