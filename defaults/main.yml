@@ -1,12 +1,27 @@
 ---
-dotfiles_repo: "https://github.com/geerlingguy/dotfiles.git"
-dotfiles_repo_version: master
+dotfiles_repo: "git@github.com:imajes/portable-env.git"
+dotfiles_repo_version: main
 dotfiles_repo_accept_hostkey: false
-dotfiles_repo_local_destination: "~/Documents/dotfiles"
+dotfiles_repo_local_destination: "~/.dotfiles"
 
 dotfiles_home: "~"
+dotfiles_folders:
+  - .config
+  - .zsh
 dotfiles_files:
-  - .zshrc
+  - .gemrc
+  - .gitconfig
   - .gitignore
-  - .inputrc
-  - .vimrc
+  - .gitignore_global
+  - .gitmodules
+  - .irbrc
+  - .pryrc
+  - .rdebugrc
+  - .tmux
+  - .zprofile
+  - .zshenv
+  - .zshrc
+  - .zshrc-extras
+dotfiles_special_links:
+  - dest: .vimrc
+    src: .config/nvim/init.vim
