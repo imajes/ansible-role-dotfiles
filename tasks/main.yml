@@ -36,13 +36,13 @@
 
 - name: Remove existing dotfiles file if a replacement is being linked.
   file:
-    path: "{{ dotfiles_home }}/{{ existing_dotfiles.item }}"
+    path: "{{ dotfiles_home }}/{{ existing_dotfile.item }}"
     state: absent
-  when: "item.rc == 0"
+  when: "existing_dotfile.item.rc == 0"
   loop: "{{ existing_dotfile_info.results|flatten(levels=1) }}"
   loop_control:
-    label: "{{ [existing_dotfiles.item] }}"
-    loop_var: existing_dotfiles
+    label: "{{ [existing_dotfile.item] }}"
+    loop_var: existing_dotfile
 
 - name: Create required folders in home folder.
   file:
