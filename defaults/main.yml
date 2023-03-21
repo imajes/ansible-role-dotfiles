@@ -9,12 +9,14 @@ dotfiles_folders:
   - .config
   - .zsh
 dotfiles_files:
+  - .config/nvim
   - .gemrc
   - .gitconfig
   - .gitignore
   - .gitignore_global
   - .gitmodules
   - .irbrc
+  - .oh-my-zsh
   - .pryrc
   - .rdebugrc
   - .tmux

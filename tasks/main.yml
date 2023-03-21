@@ -7,6 +7,17 @@
     accept_hostkey: "{{ dotfiles_repo_accept_hostkey }}"
   become: false
 
+- name: Check if submodules are in use
+  stat:
+    path: "{{ dotfiles_repo_local_destination }}/.gitmodules"
+  register: result
+  become: false
+
+- name: Update submodules if needed
+  command: "cd {{ dotfiles_repo_local_destination }} && git submodule update --init"
+  when: result.stat.exists
+  become: false
+
 - name: Ensure all configured dotfiles are links.
   command: "ls -F {{ dotfiles_home }}/{{ item }}"
   register: existing_dotfile_info
@@ -42,15 +53,6 @@
     mode: "u=rwX,g=rX,o=rX"
   become: false
   loop: "{{ dotfiles_files }}"
-
-- name: Check if submodules are in use
-  stat:
-    path: "{{ dotfiles_home }}/.gitmodules"
-  register: result
-
-- name: Update submodules if needed
-  command: "git submodule update --init"
-  when: result.stat.exists
 
 - name: Link special dotfiles into home folder.
   file:
