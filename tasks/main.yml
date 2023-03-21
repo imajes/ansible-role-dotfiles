@@ -1,25 +1,26 @@
 ---
 - name: Ensure dotfiles repository is cloned locally. user="{{ ansible_user }}"
-  git:
+  ansible.builtin.git:
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles_repo_local_destination }}"
     version: "{{ dotfiles_repo_version }}"
     accept_hostkey: "{{ dotfiles_repo_accept_hostkey }}"
+    track_submodules: true
   become: false
 
-- name: Check if submodules are in use. user="{{ ansible_user }}"
-  stat:
-    path: "{{ dotfiles_repo_local_destination }}/.gitmodules"
-  register: result
-  become: false
-
-- name: Update submodules if needed. user="{{ ansible_user }}"
-  ansible.builtin.shell:
-    chdir: "{{ dotfiles_repo_local_destination }}"
-    cmd: "git submodule update --init"
-  when: result.stat.exists
-  become: false
-
+# - name: Check if submodules are in use. user="{{ ansible_user }}"
+#   stat:
+#     path: "{{ dotfiles_repo_local_destination }}/.gitmodules"
+#   register: result
+#   become: false
+#
+# - name: Update submodules if needed. user="{{ ansible_user }}"
+#   ansible.builtin.shell:
+#     chdir: "{{ dotfiles_repo_local_destination }}"
+#     cmd: "git submodule update --init"
+#   when: result.stat.exists
+#   become: false
+#
 - name: Ensure all configured dotfiles are links. user="{{ ansible_user }}"
   command: "ls -F {{ dotfiles_home }}/{{ item }}"
   register: existing_dotfile_info
