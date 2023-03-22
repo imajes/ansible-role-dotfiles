@@ -9,6 +9,7 @@ dotfiles_folders:
   - .config
   - .extras
   - .zsh
+  - .vim/files/info:
 dotfiles_files:
   - .cargo
   - .config/nvim
