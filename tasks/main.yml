@@ -31,6 +31,15 @@
     label: "{{ [existing_dotfile.item] }}"
     loop_var: existing_dotfile
 
+- name: Remove existing dotfiles file marked for removal. user="{{ ansible_user }}"
+  file:
+    path: "{{ dotfiles_home }}/{{ dotfile_to_purge }}"
+    state: absent
+  loop: "{{ dotfiles_files_to_purge|flatten(levels=1) }}"
+  loop_control:
+    label: "{{ [dotfile_to_purge] }}"
+    loop_var: dotfile_to_purge
+
 - name: Create required folders in home folder. user="{{ ansible_user }}"
   file:
     path: "{{ dotfiles_home }}/{{ dotfile_folder_to_create }}"

@@ -13,6 +13,7 @@ dotfiles_folders:
 dotfiles_files:
   - .cargo
   - .config/nvim
+  - .config/zsh
   - .gemrc
   - .gitconfig
   - .gitignore
@@ -25,6 +26,7 @@ dotfiles_files:
   - .rdebugrc
   - .sudo_as_admin_successful
   - .tmux
+dotfiles_files_to_purge:
   - .zprofile
   - .zshenv
   - .zshrc
@@ -32,7 +34,5 @@ dotfiles_files:
 dotfiles_special_links:
   - dest: .vimrc
     src: .config/nvim/init.vim
-  - dest: .oh-my-zsh/custom/plugins/evalcache
-    src: .extras/evalcache
-  - dest: .oh-my-zsh/custom/plugins/zsh-histdb
-    src: .extras/zsh-histdb
+  - dest: .zshenv
+    src: .config/zsh/.zshenv
