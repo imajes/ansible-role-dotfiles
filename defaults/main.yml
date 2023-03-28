@@ -9,7 +9,6 @@ dotfiles_folders:
   - .config
   - .extras
   - .zsh
-  - .vim/files/info:
 dotfiles_files:
   - .cargo
   - .config/nvim
@@ -30,10 +29,11 @@ dotfiles_files_to_purge:
   - .bash_history
   - .bash_logout
   - .bashrc
-  - .profile
+  - .extras
   - .oh-my-zsh
-  - .zsh-evalcache
+  - .profile
   - .zprofile
+  - .zsh-evalcache
   - .zshenv
   - .zshrc
   - .zshrc-extras
