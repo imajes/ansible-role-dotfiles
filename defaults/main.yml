@@ -27,6 +27,12 @@ dotfiles_files:
   - .sudo_as_admin_successful
   - .tmux
 dotfiles_files_to_purge:
+  - .bash_history
+  - .bash_logout
+  - .bashrc
+  - .profile
+  - .oh-my-zsh
+  - .zsh-evalcache
   - .zprofile
   - .zshenv
   - .zshrc
