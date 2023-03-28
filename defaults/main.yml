@@ -19,7 +19,6 @@ dotfiles_files:
   - .gitignore_global
   - .gitmodules
   - .irbrc
-  - .oh-my-zsh
   - .pryrc
   - .pyenv
   - .rdebugrc
