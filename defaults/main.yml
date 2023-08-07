@@ -12,6 +12,7 @@ dotfiles_files_to_purge:
   - .bash_logout
   - .bashrc
   - .extras
+  - .gnupg
   - .oh-my-zsh
   - .profile
   - .zprofile
