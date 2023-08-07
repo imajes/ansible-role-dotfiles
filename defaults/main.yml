@@ -4,26 +4,9 @@ dotfiles_repo_version: main
 dotfiles_repo_accept_hostkey: false
 dotfiles_repo_local_destination: "~/.dotfiles"
 
+# where to send all the files
 dotfiles_home: "~"
-dotfiles_folders:
-  - .config
-  - .extras
-  - .zsh
-dotfiles_files:
-  - .cargo
-  - .config/nvim
-  - .config/zsh
-  - .gemrc
-  - .gitconfig
-  - .gitignore
-  - .gitignore_global
-  - .gitmodules
-  - .irbrc
-  - .pryrc
-  - .pyenv
-  - .rdebugrc
-  - .sudo_as_admin_successful
-  - .tmux
+# these files are removed from dest
 dotfiles_files_to_purge:
   - .bash_history
   - .bash_logout
@@ -36,8 +19,32 @@ dotfiles_files_to_purge:
   - .zshenv
   - .zshrc
   - .zshrc-extras
+# creates these folders inside of the dest
+dotfiles_folders:
+  - .config
+  - .extras
+  - .zsh
+# these files/folders are softlinked into the dest
+dotfiles_files:
+  - .cargo
+  - .config/nvim
+  - .config/zsh
+  - .gemrc
+  - .gitconfig
+  - .gitignore
+  - .gitignore_global
+  - .gitmodules
+  - .gnupg
+  - .irbrc
+  - .pryrc
+  - .pyenv
+  - .rdebugrc
+  - .sudo_as_admin_successful
+  - .tool-versions
+  - .tmux
+# these links are where there's a need to put it in a different place from where the source implies
 dotfiles_special_links:
-  - dest: .vimrc
-    src: .config/nvim/init.vim
+  # - dest: .vimrc
+  #   src: .config/nvim/init.lua
   - dest: .zshenv
     src: .config/zsh/.zshenv

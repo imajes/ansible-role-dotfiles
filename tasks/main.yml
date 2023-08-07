@@ -1,4 +1,8 @@
 ---
+- name: Remove existing dotfiles folder to ensure fresh deploy. user="{{ ansible_user }}"
+  file:
+    path: "{{ dotfiles_home }}/.dotfiles"
+    state: absent
 - name: Ensure dotfiles repository is cloned locally. user="{{ ansible_user }}"
   ansible.builtin.git:
     repo: "{{ dotfiles_repo }}"
