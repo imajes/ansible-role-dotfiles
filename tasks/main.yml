@@ -1,6 +1,6 @@
 ---
 - name: Remove existing dotfiles folder to ensure fresh deploy. user="{{ ansible_user }}"
-  file:
+  ansible.builtin.file:
     path: "{{ dotfiles_home }}/.dotfiles"
     state: absent
 - name: Ensure dotfiles repository is cloned locally. user="{{ ansible_user }}"
@@ -11,13 +11,13 @@
     force: true
     accept_hostkey: "{{ dotfiles_repo_accept_hostkey }}"
 
-- name: Update submodules & init if needed. user="{{ ansible_user }}"
-  ansible.builtin.shell:
+- name: Update submodules & init repo. user="{{ ansible_user }}"
+  ansible.builtin.command:
     chdir: "{{ dotfiles_repo_local_destination }}"
-    cmd: "git submodule update --init"
+    cmd: git submodule update --init
 
 - name: Ensure all configured dotfiles are links. user="{{ ansible_user }}"
-  command: "ls -F {{ dotfiles_home }}/{{ item }}"
+  ansible.builtin.command: ls -F {{ dotfiles_home }}/{{ item }}
   register: existing_dotfile_info
   failed_when: false
   check_mode: false
@@ -27,49 +27,49 @@
     label: "{{ [item] }}"
 
 - name: Remove existing dotfiles file if a replacement is being linked. user="{{ ansible_user }}"
-  file:
+  ansible.builtin.file:
     path: "{{ dotfiles_home }}/{{ existing_dotfile.item }}"
     state: absent
-  when: "existing_dotfile.rc == 0"
-  loop: "{{ existing_dotfile_info.results|flatten(levels=1) }}"
+  when: existing_dotfile.rc == 0
+  loop: "{{ existing_dotfile_info.results | flatten(levels=1) }}"
   loop_control:
     label: "{{ [existing_dotfile.item] }}"
     loop_var: existing_dotfile
 
 - name: Remove existing dotfiles file marked for removal. user="{{ ansible_user }}"
-  file:
+  ansible.builtin.file:
     path: "{{ dotfiles_home }}/{{ dotfile_to_purge }}"
     state: absent
-  loop: "{{ dotfiles_files_to_purge|flatten(levels=1) }}"
+  loop: "{{ dotfiles_files_to_purge | flatten(levels=1) }}"
   loop_control:
     label: "{{ [dotfile_to_purge] }}"
     loop_var: dotfile_to_purge
 
 - name: Create required folders in home folder. user="{{ ansible_user }}"
-  file:
+  ansible.builtin.file:
     path: "{{ dotfiles_home }}/{{ dotfile_folder_to_create }}"
     state: directory
-    mode: "u=rwX,g=rX,o=rX"
+    mode: u=rwX,g=rX,o=rX
   loop: "{{ dotfiles_folders }}"
   loop_control:
     loop_var: dotfile_folder_to_create
 
 - name: Link dotfiles into home folder. user="{{ ansible_user }}"
-  file:
+  ansible.builtin.file:
     src: "{{ dotfiles_repo_local_destination }}/{{ dotfile_to_be_linked }}"
     dest: "{{ dotfiles_home }}/{{ dotfile_to_be_linked }}"
     state: link
-    mode: "u=rwX,g=rX,o=rX"
+    mode: u=rwX,g=rX,o=rX
   loop: "{{ dotfiles_files }}"
   loop_control:
     loop_var: dotfile_to_be_linked
 
 - name: Link special dotfiles into home folder. user="{{ ansible_user }}"
-  file:
+  ansible.builtin.file:
     src: "{{ dotfiles_repo_local_destination }}/{{ special_dotfile_to_be_linked.src }}"
     dest: "{{ dotfiles_home }}/{{ special_dotfile_to_be_linked.dest }}"
     state: link
-    mode: "u=rwX,g=rX,o=rX"
-  loop: "{{ dotfiles_special_links|flatten(levels=1) }}"
+    mode: u=rwX,g=rX,o=rX
+  loop: "{{ dotfiles_special_links | flatten(levels=1) }}"
   loop_control:
     loop_var: special_dotfile_to_be_linked
