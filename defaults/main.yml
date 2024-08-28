@@ -15,6 +15,8 @@ dotfiles_files_to_purge:
   - .gnupg
   - .oh-my-zsh
   - .profile
+  - .pyenv
+  - .vimrc
   - .zprofile
   - .zsh-evalcache
   - .zshenv
@@ -28,7 +30,10 @@ dotfiles_folders:
 # these files/folders are softlinked into the dest
 dotfiles_files:
   - .cargo
+  - .config/bat
+  - .config/neovide
   - .config/nvim
+  - .config/wezterm
   - .config/zsh
   - .gemrc
   - .gitconfig
@@ -38,11 +43,11 @@ dotfiles_files:
   - .gnupg
   - .irbrc
   - .pryrc
-  - .pyenv
   - .rdebugrc
   - .sudo_as_admin_successful
   - .tool-versions
   - .tmux
+  - .zsh_portable-env
 # these links are where there's a need to put it in a different place from where the source implies
 dotfiles_special_links:
   # - dest: .vimrc
