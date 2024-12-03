@@ -11,7 +11,6 @@ dotfiles_files_to_purge:
   - .bash_history
   - .bash_logout
   - .bashrc
-  - .config/atuin/config.toml
   - .extras
   - .gnupg
   - .oh-my-zsh
@@ -31,7 +30,7 @@ dotfiles_folders:
 # these files/folders are softlinked into the dest
 dotfiles_files:
   - .cargo
-  - .config/atuin/config.toml
+  - .config/atuin
   - .config/bat
   - .config/neovide
   - .config/nvim
