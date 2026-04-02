@@ -8,6 +8,9 @@ dotfiles_repo_local_destination: ~/.dotfiles
 dotfiles_home: "~"
 # these files are removed from dest
 dotfiles_files_to_purge:
+  - .config/fish
+  - .config/TabNine
+  - .bash-preexec.sh
   - .bash_history
   - .bash_logout
   - .bashrc
@@ -17,6 +20,7 @@ dotfiles_files_to_purge:
   - .profile
   - .pyenv
   - .vimrc
+  - .rdebugrc
   - .zprofile
   - .zsh-evalcache
   - .zshenv
@@ -27,15 +31,21 @@ dotfiles_folders:
   - .config
   - .extras
   - .zsh
+  - bin
 # these files/folders are softlinked into the dest
 dotfiles_files:
   - .cargo
   - .config/atuin
   - .config/bat
+  - .config/gh
+  - .config/husky
+  - .config/mise
   - .config/neovide
   - .config/nvim
+  - .config/wandb
   - .config/wezterm
   - .config/zsh
+  - .default-gems
   - .gemrc
   - .gitconfig
   - .gitignore
@@ -44,11 +54,11 @@ dotfiles_files:
   - .gnupg
   - .irbrc
   - .pryrc
-  - .rdebugrc
   - .sudo_as_admin_successful
-  - .tool-versions
   - .tmux
+  - .tool-versions
   - .zsh_portable-env
+  - bin/zsh-welcome
 # these links are where there's a need to put it in a different place from where the source implies
 dotfiles_special_links:
   # - dest: .vimrc
