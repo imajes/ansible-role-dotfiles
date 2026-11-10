@@ -1,67 +1,44 @@
 ---
 dotfiles_repo: https://github.com/imajes/portable-env.git
-dotfiles_repo_version: main
+# Select a reviewed, published commit; moving branch names are not a rollout pin.
+dotfiles_repo_version: ""
 dotfiles_repo_accept_hostkey: false
-dotfiles_repo_local_destination: ~/.dotfiles
-
-# where to send all the files
-dotfiles_home: "~"
-# these files are removed from dest
-dotfiles_files_to_purge:
-  - .config/fish
-  - .config/TabNine
-  - .bash-preexec.sh
-  - .bash_history
-  - .bash_logout
-  - .bashrc
-  - .extras
-  - .gnupg
-  - .oh-my-zsh
-  - .profile
-  - .pyenv
-  - .vimrc
-  - .rdebugrc
-  - .zprofile
-  - .zsh-evalcache
-  - .zshenv
-  - .zshrc
-  - .zshrc-extras
-# creates these folders inside of the dest
-dotfiles_folders:
-  - .config
-  - .extras
-  - .zsh
-  - bin
-# these files/folders are softlinked into the dest
+# Explicit per-account home; the caller runs this role as the account owner.
+dotfiles_home: ""
+dotfiles_repo_local_destination: "{{ dotfiles_home }}/.dotfiles"
+dotfiles_state_directory: "{{ dotfiles_home }}/.local/state/dotfiles"
+# Compatibility variable: nonempty purge lists are rejected, never executed.
+dotfiles_files_to_purge: []
+# Directories select their tracked files, not whole directory replacements.
+# Private/runtime neighbors remain untouched, including under existing directory links.
 dotfiles_files:
-  - .cargo
-  - .config/atuin
+  - .config/aprc
+  - .config/atuin/config.toml
   - .config/bat
-  - .config/gh
-  - .config/husky
-  - .config/mise
-  - .config/neovide
+  - .config/gh/config.yml
+  - .config/htop/htoprc
+  - .config/husky/init.sh
+  - .config/mdcat/config.toml
+  - .config/mise/config.toml
+  - .config/mise/scripts
+  - .config/neovide/config.toml
   - .config/nvim
-  - .config/wandb
+  - .config/rod/config.toml
   - .config/wezterm
   - .config/zsh
   - .default-gems
   - .gemrc
+  - .gitattributes
   - .gitconfig
-  - .gitignore
   - .gitignore_global
-  - .gitmodules
-  - .gnupg
   - .irbrc
+  - .markdownlint.jsonc
   - .pryrc
-  - .sudo_as_admin_successful
-  - .tmux
+  - .shellcheckrc
+  - .tidyrc
   - .tool-versions
   - .zsh_portable-env
   - bin/zsh-welcome
-# these links are where there's a need to put it in a different place from where the source implies
 dotfiles_special_links:
-  # - dest: .vimrc
-  #   src: .config/nvim/init.lua
   - dest: .zshenv
     src: .config/zsh/.zshenv

@@ -1,75 +1,37 @@
 ---
-- name: Remove existing dotfiles folder to ensure fresh deploy. user="{{ ansible_user }}"
-  ansible.builtin.file:
-    path: "{{ dotfiles_home }}/.dotfiles"
-    state: absent
-- name: Ensure dotfiles repository is cloned locally. user="{{ ansible_user }}"
+- name: Require an explicit account and immutable source revision
+  ansible.builtin.assert:
+    that:
+      - dotfiles_home is match('^/')
+      - dotfiles_repo_local_destination is match('^/')
+      - dotfiles_repo_version is match('^[0-9a-f]{40}$')
+      - dotfiles_files_to_purge | length == 0
+    fail_msg: Supply an absolute account home and reviewed full commit SHA. Home-directory purges are no longer supported.
+- name: Preserve edits to managed checkout files before updating
+  dotfiles_state:
+    action: prepare
+    home: "{{ dotfiles_home }}"
+    checkout: "{{ dotfiles_repo_local_destination }}"
+    state: "{{ dotfiles_state_directory }}"
+    files: "{{ dotfiles_files }}"
+    special_links: "{{ dotfiles_special_links }}"
+- name: Update the source checkout and pinned submodules in place
   ansible.builtin.git:
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles_repo_local_destination }}"
     version: "{{ dotfiles_repo_version }}"
-    force: true
+    force: false
+    recursive: true
+    track_submodules: false
     accept_hostkey: "{{ dotfiles_repo_accept_hostkey }}"
-
-- name: Update submodules & init repo. user="{{ ansible_user }}"
-  ansible.builtin.command:
-    chdir: "{{ dotfiles_repo_local_destination }}"
-    cmd: git submodule update --init
-
-- name: Ensure all configured dotfiles are links. user="{{ ansible_user }}"
-  ansible.builtin.command: ls -F {{ dotfiles_home }}/{{ item }}
-  register: existing_dotfile_info
-  failed_when: false
-  check_mode: false
-  changed_when: false
-  loop: "{{ dotfiles_files }}"
-  loop_control:
-    label: "{{ [item] }}"
-
-- name: Remove existing dotfiles file if a replacement is being linked. user="{{ ansible_user }}"
-  ansible.builtin.file:
-    path: "{{ dotfiles_home }}/{{ existing_dotfile.item }}"
-    state: absent
-  when: existing_dotfile.rc == 0
-  loop: "{{ existing_dotfile_info.results | flatten(levels=1) }}"
-  loop_control:
-    label: "{{ [existing_dotfile.item] }}"
-    loop_var: existing_dotfile
-
-- name: Remove existing dotfiles file marked for removal. user="{{ ansible_user }}"
-  ansible.builtin.file:
-    path: "{{ dotfiles_home }}/{{ dotfile_to_purge }}"
-    state: absent
-  loop: "{{ dotfiles_files_to_purge | flatten(levels=1) }}"
-  loop_control:
-    label: "{{ [dotfile_to_purge] }}"
-    loop_var: dotfile_to_purge
-
-- name: Create required folders in home folder. user="{{ ansible_user }}"
-  ansible.builtin.file:
-    path: "{{ dotfiles_home }}/{{ dotfile_folder_to_create }}"
-    state: directory
-    mode: u=rwX,g=rX,o=rX
-  loop: "{{ dotfiles_folders }}"
-  loop_control:
-    loop_var: dotfile_folder_to_create
-
-- name: Link dotfiles into home folder. user="{{ ansible_user }}"
-  ansible.builtin.file:
-    src: "{{ dotfiles_repo_local_destination }}/{{ dotfile_to_be_linked }}"
-    dest: "{{ dotfiles_home }}/{{ dotfile_to_be_linked }}"
-    state: link
-    mode: u=rwX,g=rX,o=rX
-  loop: "{{ dotfiles_files }}"
-  loop_control:
-    loop_var: dotfile_to_be_linked
-
-- name: Link special dotfiles into home folder. user="{{ ansible_user }}"
-  ansible.builtin.file:
-    src: "{{ dotfiles_repo_local_destination }}/{{ special_dotfile_to_be_linked.src }}"
-    dest: "{{ dotfiles_home }}/{{ special_dotfile_to_be_linked.dest }}"
-    state: link
-    mode: u=rwX,g=rX,o=rX
-  loop: "{{ dotfiles_special_links | flatten(levels=1) }}"
-  loop_control:
-    loop_var: special_dotfile_to_be_linked
+  environment:
+    GIT_TERMINAL_PROMPT: "0"
+    GIT_LFS_SKIP_SMUDGE: "1"
+- name: Link only reviewed tracked configuration and retain account state
+  dotfiles_state:
+    action: link
+    home: "{{ dotfiles_home }}"
+    checkout: "{{ dotfiles_repo_local_destination }}"
+    state: "{{ dotfiles_state_directory }}"
+    files: "{{ dotfiles_files }}"
+    special_links: "{{ dotfiles_special_links }}"
